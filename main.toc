@@ -1,0 +1,46 @@
+\contentsline {chapter}{\numberline {第1章}はじめに}{3}{chapter.1}%
+\contentsline {chapter}{\numberline {第2章}関連研究}{5}{chapter.2}%
+\contentsline {chapter}{\numberline {第3章}提案手法：GLRモデル}{6}{chapter.3}%
+\contentsline {section}{\numberline {3.1}設計動機と全体構成}{6}{section.3.1}%
+\contentsline {section}{\numberline {3.2}基本設計方針}{6}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}線形モデルとしての設計}{6}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}4系列による予測分解}{7}{subsection.3.2.2}%
+\contentsline {section}{\numberline {3.3}データセットと特徴量設計}{7}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}データセット概要}{7}{subsection.3.3.1}%
+\contentsline {paragraph}{ターゲット変数の正規化}{8}{section*.3}%
+\contentsline {subsection}{\numberline {3.3.2}LLMによるレビュー情報の抽出}{8}{subsection.3.3.2}%
+\contentsline {paragraph}{抽出手順}{9}{section*.4}%
+\contentsline {paragraph}{抽出結果の集約}{9}{section*.5}%
+\contentsline {paragraph}{抽出結果の妥当性確認}{9}{section*.6}%
+\contentsline {subsection}{\numberline {3.3.3}特徴量グループの構成}{9}{subsection.3.3.3}%
+\contentsline {paragraph}{特徴量設計の補足}{10}{section*.8}%
+\contentsline {section}{\numberline {3.4}損失関数}{11}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}損失関数の設計方針}{11}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}基本的な学習安定化：L2正則化}{12}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}課題1への対応：グループ間相関抑制}{12}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}課題2への対応：グループ内分散抑制}{13}{subsection.3.4.4}%
+\contentsline {subsection}{\numberline {3.4.5}課題3への対応：Movie 系列への選択的抑制}{13}{subsection.3.4.5}%
+\contentsline {subsection}{\numberline {3.4.6}最終的な損失関数}{14}{subsection.3.4.6}%
+\contentsline {chapter}{\numberline {第4章}実験結果と分析}{15}{chapter.4}%
+\contentsline {section}{\numberline {4.1}線形モデルとしての妥当性}{15}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}予測性能の評価}{15}{subsection.4.1.1}%
+\contentsline {section}{\numberline {4.2}寄与分解の厳密性}{15}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}4系列による予測の構造的分解}{15}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}情報保持率の検証}{15}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}説明の安定性と外的整合性}{15}{subsection.4.2.3}%
+\contentsline {paragraph}{説明の安定性（SHAP比較）}{15}{section*.10}%
+\contentsline {paragraph}{外的整合性（Permutation Importance）}{15}{section*.11}%
+\contentsline {section}{\numberline {4.3}個性理解の定量的実証}{15}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}寄与バランスとVariance分析}{16}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}評価スタイルクラスターの発見}{16}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}評価スタイル差の大きさに関する補助的検証}{16}{subsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.3.4}実例による解釈}{16}{subsection.4.3.4}%
+\contentsline {chapter}{\numberline {第5章}考察}{17}{chapter.5}%
+\contentsline {section}{\numberline {5.1}線形分解モデルとしての意義}{17}{section.5.1}%
+\contentsline {section}{\numberline {5.2}寄与分解結果の提示例}{17}{section.5.2}%
+\contentsline {section}{\numberline {5.3}本手法の限界}{17}{section.5.3}%
+\contentsline {section}{\numberline {5.4}今後の展望}{17}{section.5.4}%
+\contentsline {chapter}{\numberline {第6章}おわりに}{18}{chapter.6}%
+\contentsline {section}{\numberline {6.1}本研究のまとめ}{18}{section.6.1}%
+\contentsline {section}{\numberline {6.2}今後の課題}{18}{section.6.2}%
+\contentsline {chapter}{参考文献}{19}{chapter*.12}%

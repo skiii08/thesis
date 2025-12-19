@@ -1,0 +1,73 @@
+{
+  // ===== LuaLaTeX をデフォルトにする =====
+  "latex-workshop.latex.recipe.default": "latexmk (lualatex)",
+
+  // ===== 自動ビルド =====
+  "latex-workshop.latex.autoBuild.run": "onSave",
+
+  // ===== PDF表示 =====
+  "latex-workshop.view.pdf.viewer": "tab",
+  "latex-workshop.synctex.afterBuild.enabled": true,
+
+  // ===== 自動クリーンアップ =====
+  "latex-workshop.latex.clean.enabled": true,
+  "latex-workshop.latex.clean.fileTypes": [
+    "*.aux",
+    "*.bbl",
+    "*.blg",
+    "*.idx",
+    "*.ind",
+    "*.lof",
+    "*.lot",
+    "*.out",
+    "*.toc",
+    "*.acn",
+    "*.acr",
+    "*.alg",
+    "*.glg",
+    "*.glo",
+    "*.gls",
+    "*.ist",
+    "*.fls",
+    "*.log",
+    "*.fdb_latexmk",
+    "*.synctex.gz"
+  ],
+
+  // ===== LaTeX Tools（LuaLaTeX + latexmk） =====
+  "latex-workshop.latex.tools": [
+    {
+      "name": "lualatex",
+      "command": "lualatex",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "%DOC%"
+      ]
+    },
+    {
+      "name": "latexmk_lualatex",
+      "command": "latexmk",
+      "args": [
+        "-lualatex",
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-shell-escape",
+        "%DOC%"
+      ]
+    }
+  ],
+
+  // ===== LaTeX Recipes =====
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "LuaLaTeX",
+      "tools": ["lualatex"]
+    },
+    {
+      "name": "latexmk (lualatex)",
+      "tools": ["latexmk_lualatex"]
+    }
+  ]
+}

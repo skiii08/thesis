@@ -1,0 +1,78 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\@writefile{toc}{\contentsline {chapter}{\numberline {第3章}提案手法：GLRモデル}{6}{chapter.3}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\jsc@mpt }}
+\@writefile{lot}{\addvspace {10\jsc@mpt }}
+\newlabel{sec:glr_structure}{{3}{6}{提案手法：GLRモデル}{chapter.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}設計動機と全体構成}{6}{section.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}基本設計方針}{6}{section.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}線形モデルとしての設計}{6}{subsection.3.2.1}\protected@file@percent }
+\newlabel{subsec:linear_design}{{3.2.1}{6}{線形モデルとしての設計}{subsection.3.2.1}{}}
+\newlabel{eq:linear_base_y}{{3.1}{6}{線形モデルとしての設計}{equation.3.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}4系列による予測分解}{7}{subsection.3.2.2}\protected@file@percent }
+\newlabel{subsec:four_stream}{{3.2.2}{7}{4系列による予測分解}{subsection.3.2.2}{}}
+\newlabel{eq:four_stream}{{3.2}{7}{4系列による予測分解}{equation.3.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}データセットと特徴量設計}{7}{section.3.3}\protected@file@percent }
+\newlabel{sec:dataset}{{3.3}{7}{データセットと特徴量設計}{section.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}データセット概要}{7}{subsection.3.3.1}\protected@file@percent }
+\newlabel{subsec:dataset_overview}{{3.3.1}{7}{データセット概要}{subsection.3.3.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces データセット統計}}{8}{table.caption.2}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:dataset_stats}{{3.1}{8}{データセット統計}{table.caption.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{ターゲット変数の正規化}{8}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}LLMによるレビュー情報の抽出}{8}{subsection.3.3.2}\protected@file@percent }
+\newlabel{subsec:llm}{{3.3.2}{8}{LLMによるレビュー情報の抽出}{subsection.3.3.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{抽出手順}{9}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{抽出結果の集約}{9}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{抽出結果の妥当性確認}{9}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}特徴量グループの構成}{9}{subsection.3.3.3}\protected@file@percent }
+\newlabel{subsec:features}{{3.3.3}{9}{特徴量グループの構成}{subsection.3.3.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces 特徴量グループの構成}}{10}{table.caption.7}\protected@file@percent }
+\newlabel{tab:feature_groups}{{3.2}{10}{特徴量グループの構成}{table.caption.7}{}}
+\@writefile{toc}{\contentsline {paragraph}{特徴量設計の補足}{10}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}損失関数}{11}{section.3.4}\protected@file@percent }
+\newlabel{sec:objective}{{3.4}{11}{損失関数}{section.3.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}損失関数の設計方針}{11}{subsection.3.4.1}\protected@file@percent }
+\newlabel{subsec:objective_design}{{3.4.1}{11}{損失関数の設計方針}{subsection.3.4.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces 観測される課題と正則化項の対応関係}}{12}{table.caption.9}\protected@file@percent }
+\newlabel{tab:regularization_correspondence}{{3.3}{12}{観測される課題と正則化項の対応関係}{table.caption.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}基本的な学習安定化：L2正則化}{12}{subsection.3.4.2}\protected@file@percent }
+\newlabel{subsec:l2_regularization}{{3.4.2}{12}{基本的な学習安定化：L2正則化}{subsection.3.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}課題1への対応：グループ間相関抑制}{12}{subsection.3.4.3}\protected@file@percent }
+\newlabel{subsec:inter_group_correlation}{{3.4.3}{12}{課題1への対応：グループ間相関抑制}{subsection.3.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.4}課題2への対応：グループ内分散抑制}{13}{subsection.3.4.4}\protected@file@percent }
+\newlabel{subsec:intra_group_variance}{{3.4.4}{13}{課題2への対応：グループ内分散抑制}{subsection.3.4.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.5}課題3への対応：Movie 系列への選択的抑制}{13}{subsection.3.4.5}\protected@file@percent }
+\newlabel{subsec:movie_suppression}{{3.4.5}{13}{課題3への対応：Movie 系列への選択的抑制}{subsection.3.4.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.6}最終的な損失関数}{14}{subsection.3.4.6}\protected@file@percent }
+\newlabel{subsec:final_objective}{{3.4.6}{14}{最終的な損失関数}{subsection.3.4.6}{}}
+\@setckpt{chapters/03_method}{
+\setcounter{page}{15}
+\setcounter{equation}{8}
+\setcounter{enumi}{0}
+\setcounter{enumii}{0}
+\setcounter{enumiii}{0}
+\setcounter{enumiv}{0}
+\setcounter{footnote}{0}
+\setcounter{mpfootnote}{0}
+\setcounter{part}{0}
+\setcounter{chapter}{3}
+\setcounter{section}{4}
+\setcounter{subsection}{6}
+\setcounter{subsubsection}{0}
+\setcounter{paragraph}{0}
+\setcounter{subparagraph}{0}
+\setcounter{figure}{0}
+\setcounter{table}{3}
+\setcounter{warekiyear}{7}
+\setcounter{parentequation}{0}
+\setcounter{caption@flags}{2}
+\setcounter{continuedfloat}{0}
+\setcounter{subfigure}{0}
+\setcounter{subtable}{0}
+\setcounter{section@level}{2}
+\setcounter{Item}{0}
+\setcounter{Hfootnote}{0}
+\setcounter{bookmark@seq@number}{0}
+\setcounter{float@type}{4}
+}

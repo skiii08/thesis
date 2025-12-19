@@ -1,0 +1,477 @@
+\chapter{実験結果と分析}
+
+\section{線形モデルとしての妥当性}
+
+\subsection{予測性能の評価}
+
+GLRの予測性能を、回帰指標とランキング指標の両面から評価した。
+表\ref{tab:glr_perf}に、Train / Validation / Test の3分割における性能を示す。
+
+ここで、平均絶対誤差（Mean Absolute Error; MAE）とは、
+予測値と実測値の差の絶対値を平均した指標であり、
+「平均してどれだけ予測が外れているか」を表す。
+値が小さいほど予測精度が高いことを意味する。
+RMSE（Root Mean Squared Error）は誤差の二乗平均平方根であり、
+大きな誤差をより強く評価する指標である。
+また、Spearmanの順位相関係数 $\rho$ は、
+予測順位と実測順位の単調な一致度を測る指標である。
+
+\begin{table}[H]
+\centering
+\caption{GLRの予測性能（全Split）}
+\label{tab:glr_perf}
+\begin{tabular}{lcccc}
+\toprule
+Split & MAE & RMSE & Spearman $\rho$ & サンプル数 \\
+\midrule
+Train & 0.642 & 0.822 & 0.615 & 25,202 \\
+Val   & 0.663 & 0.851 & 0.569 & 4,320 \\
+Test  & 0.656 & 0.846 & 0.582 & 6,481 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Test Set における MAE は 0.656 であり、
+10段階評価において平均して約 $\pm0.66$ 点の誤差に相当する。
+例えば「7点と予測して実際は6.3点程度」という水準であり、
+映画推薦システムとして実用的な精度といえる。
+また、Train と Test の MAE 差はわずか 0.014 であり、
+過学習が起きていないことを示している。
+
+さらに、推薦システムとしての実用性を評価するため、
+ランキング指標を測定した（表\ref{tab:ranking}）。
+ここで、MRR（Mean Reciprocal Rank）は、
+最初に正解が出現する順位の逆数の平均であり、
+値が大きいほど早い段階で「当たり」が提示されることを意味する。
+NDCG@10 は、上位10件の推薦リスト全体の質を評価する指標である。
+Recall@10 は、ユーザーが高く評価する映画のうち、
+どれだけを上位10件の推薦に含められているかを表す。
+
+\begin{table}[H]
+\centering
+\caption{推薦精度（Ranking Metrics）}
+\label{tab:ranking}
+\begin{tabular}{lcl}
+\toprule
+指標 & 値 & 解釈 \\
+\midrule
+MRR       & 0.853 & 最初の「当たり」が平均1.17位に出現 \\
+NDCG@10   & 0.421 & 上位10本の質は実用レベル \\
+Recall@10 & 0.849 & 好みの映画の85\%を上位10本で回収 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Recall@10 が 0.849 と高いことは、
+ユーザーが好む映画の大半を上位推薦リストで捕捉できていることを意味する。
+本研究はランキング最適化（Listwise や Pairwise 損失）を直接目的としていないにもかかわらず、
+この水準を達成しており、
+線形モデルである GLR が推薦用途に十分な性能を持つことが確認できる。
+
+\FloatBarrier
+
+
+
+
+\section{寄与分解の厳密性}
+
+\subsection{4系列による予測の構造的分解}
+
+GLRの予測は、User・Movie・Interaction・Reviewの4系列に厳密に分解される。
+表\ref{tab:contrib_balance}に、Test Set全体における各系列の寄与率を示す。
+
+\begin{table}[H]
+\centering
+\caption{寄与バランス（Test Set全体）}
+\label{tab:contrib_balance}
+\begin{tabular}{lccc}
+\toprule
+系列 & 寄与率（Var\%） & 平均$|w|$ & 有効次元 \\
+\midrule
+User        & 40.5\% & 0.023 & 534/686 \\
+Movie       & 43.3\% & 0.019 & 941/1202 \\
+Interaction & 13.3\% & 0.020 & 62/80 \\
+Review      & 2.8\%  & 0.011 & 18/22 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+UserとMovieがそれぞれ約40\%ずつとほぼ対等の寄与率を示している。
+これは、GLRが「映画の一般的評価」と「ユーザー個性」のバランスを保てていることを意味する。
+Interactionは13.3\%と補助的な役割を果たし、
+IDI（Interaction Dependency Index）は0.158と理想的範囲（0.10--0.25）内にある。
+Reviewは2.8\%と小さく、1レビュー単位の微調整信号として妥当である。
+
+図\ref{fig:contrib_structure}に寄与構成の可視化を示す。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{fig1_personalization_evidence.png}
+\caption{寄与構成の可視化}
+\label{fig:contrib_structure}
+\end{figure}
+
+\textbf{(a) Contribution Composition}：
+UserとMovieがほぼ同等の面積を占め、個性と映画性が対等に機能していることが視覚的に確認できる。
+
+\textbf{(b) Within-Group Variance}：
+User系列の分散（0.581）がMovie系列（0.285）の約2倍であり、
+「同一ユーザー内の揺れ」が「同一映画内の揺れ」を大きく上回る。
+この結果は後述する4.3節の個性理解の基礎となる。
+
+\FloatBarrier
+% ===========================
+
+\subsection{情報保持率の検証（EIL分析）}
+
+線形モデルの重要な性質は、寄与の足し算が予測値を完全に再現できる点にある。
+これを定量的に評価するため、EIL（Explanation Information Loss）を測定した。
+
+\[
+\mathrm{EIL} = 1 - \frac{\mathrm{Var}(\mathrm{explained})}{\mathrm{Var}(\mathrm{predicted})}
+\]
+
+EILが0に近いほど、寄与の足し算が元の予測の情報を完全に保持していることを意味する。
+
+表\ref{tab:eil_analysis}に結果を示す。
+
+\begin{table}[H]
+\centering
+\caption{EIL分析結果}
+\label{tab:eil_analysis}
+\begin{tabular}{lc}
+\toprule
+指標 & 値 \\
+\midrule
+Predicted Variance & 0.754 \\
+Explained Variance & 0.754 \\
+Variance Ratio     & 1.000 \\
+EIL                & -0.0000 \\
+Information Retention & 100.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+図\ref{fig:eil_plot}に可視化を示す。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{fig2_eil_analysis.png}
+\caption{EIL分析の可視化}
+\label{fig:eil_plot}
+\end{figure}
+
+EIL = -0.0000（実質0）という結果は、寄与分解が予測情報を完全に保持していることを示す。
+これはGLRの予測式
+
+\[
+\hat{y} = b + \sum_{g} \mathbf{w}_g^\top \mathbf{x}_g
+\]
+
+が加法構造を持つため、数学的に保証される性質である。
+
+SHAPやAttentionのような事後説明手法では、  
+「説明の足し算 ≠ 予測値」になりうるため、EILが100\%に到達することは理論的にない。  
+GLRのEIL=0は、「説明＝予測の内訳」という線形モデルの本質を実証する。
+
+\FloatBarrier
+% ===========================
+
+\subsection{説明の安定性と外的整合性}
+
+\paragraph{説明の安定性（SHAP比較）}
+
+GLRの寄与は重み×特徴で一意に決まるため、試行間で変動しない。
+これを確認するため、背景サンプルを10回変えてKernel SHAPを再計算し、
+各特徴の変動係数（CV）を比較した。結果を表\ref{tab:stability}に示す。
+
+\begin{table}[H]
+\centering
+\caption{説明安定性の比較}
+\label{tab:stability}
+\begin{tabular}{lccc}
+\toprule
+Method & Mean CV(\%) & Max CV(\%) & Reproducibility \\
+\midrule
+GLR  & 0.00 & 0.00  & 1.000 \\
+SHAP & 19.94 & 249.53 & 0.801 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+図\ref{fig:stability_plot}に可視化を示す。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{fig1_stability_comparison.png}
+\caption{説明安定性の比較}
+\label{fig:stability_plot}
+\end{figure}
+
+GLRでは寄与値がどの試行でも完全に一致し、  
+SHAPでは背景依存性により寄与が大幅に揺れることが確認できた。
+
+\paragraph{外的整合性（Permutation Importance）}
+
+GLRの内部重みが外部的な重要度とも整合しているか検証するため、
+Permutation Importanceによる$\Delta$MAEと比較した。
+表\ref{tab:external_alignment}に結果を示す。
+
+\begin{table}[H]
+\centering
+\caption{重要度指標の整合性}
+\label{tab:external_alignment}
+\begin{tabular}{lcl}
+\toprule
+指標 & 値 & 解釈 \\
+\midrule
+Weight--Permutation相関（Spearman $\rho$） & 0.583 & 内部重みと外部摂動の一致 \\
+Effective Dimensions & 78.0\% & 過度集中せず健全な寄与構造 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+図\ref{fig:perm_scatter}に散布図を示す。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{alignment_scatter_weight_vs_pi.png}
+\caption{重みとPermutation Importanceの整合性}
+\label{fig:perm_scatter}
+\end{figure}
+
+Spearman $\rho$ = 0.583 は、
+「重みが大きい特徴ほど、破壊したときの性能劣化も大きい」  
+という外的整合性を示す。
+
+Effective Dimensions 78\% は、
+寄与が特定次元に偏りすぎず、かといって全次元が均一でもない
+健康的な寄与構造であることを示す。
+
+\FloatBarrier
+
+
+
+\section{個性理解の定量的実証}
+
+\subsection{寄与バランスとVariance分析}
+
+GLRがユーザー個性を捉えているかを検証するため、Within-Group Varianceを測定した。
+これは、「同一ユーザーが異なる映画を評価したときのUser寄与のばらつき」と、
+「同一映画を異なるユーザーが評価したときのMovie寄与のばらつき」を比較するものである。
+
+表\ref{tab:within_variance}に結果を示す。
+
+\begin{table}[H]
+\centering
+\caption{Within-Group Variance}
+\label{tab:within_variance}
+\begin{tabular}{lcl}
+\toprule
+指標 & 値 & 解釈 \\
+\midrule
+User内分散（Var\_user）  & 0.581 & 同じユーザーでも映画によって揺れる \\
+Movie内分散（Var\_movie） & 0.285 & 同じ映画でもユーザーによって揺れる \\
+Variance Ratio & 2.04 & User側の揺れがMovie側の2倍以上 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Variance Ratio = 2.04 は、個性の影響が映画特徴の2倍以上であることを示す。
+これは、GLRが「映画の一般的評価」ではなく「ユーザーごとの違い」を強く捉えていることを意味する。
+
+図\ref{fig:user_movie_scatter}にUser VarianceとMovie Varianceの散布図を示す。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\linewidth]{fig4_personalization_scatter.png}
+\caption{User--Movie Variance散布図}
+\label{fig:user_movie_scatter}
+\end{figure}
+
+多くの点が斜線（User Variance = Movie Variance）より右下に位置し、
+User側の揺れが大きいことが視覚的に確認できる。
+赤色領域は「個性が支配的」、青色領域は「映画特徴が支配的」を示す。
+
+この結果は、映画推薦においてPersonalizationが不可欠であることを定量的に裏付けている。
+
+\FloatBarrier
+% ===========================
+
+
+\subsection{評価スタイルクラスターの発見}
+
+GLRでは、寄与分解を通じて各ユーザーの評価スタイルを
+6軸（interaction / actor / director / genre / content / background）のベクトルとして表現できる。
+この6次元ベクトルをK-means（k = 6）によりクラスタリングし、評価傾向の類型化を行った。
+
+表\ref{tab:clusters_6}に6つのクラスターの概要を示す。
+
+\begin{table}[H]
+\centering
+\caption{6つの評価傾向クラスター}
+\label{tab:clusters_6}
+\begin{tabular}{lccc}
+\toprule
+クラスター名 & 特徴 & 説明 & 人数 \\
+\midrule
+Content-Focused（Cluster 0） & content↑ / actor・director中程度 &
+映画の内容・キーワード・レビュー要素をよく参照する & 113 \\
+Genre-Focused（Cluster 1） & genre↑ &
+作品のジャンル構造を重視する「型」判断 & 135 \\
+Multi-Signal（Cluster 2） & content・interaction↑ &
+内容＋相性を複合的に使うタイプ & 76 \\
+Director-Focused（Cluster 3） & director↑↑（最突出） &
+監督・制作陣の特徴を強く参照する「制作陣特化」 & 130 \\
+Balanced（Cluster 4） & actor・director・genreが均衡 &
+全体的に寄与が平均的で偏りが小さい一般的な型 & 194 \\
+Actor-Focused（Cluster 5） & actor↑↑（最突出） &
+俳優・キャストの好みが評価を支配するタイプ & 87 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+図\ref{fig:cluster_heatmap}にクラスター寄与構造のヒートマップを示す。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{heatmap_profiles.png}
+\caption{クラスター寄与構造のヒートマップ}
+\label{fig:cluster_heatmap}
+\end{figure}
+
+図\ref{fig:radar_all}に6軸プロファイルのレーダーチャートを示す。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{radar_all_with_average.png}
+\caption{6軸プロファイルのレーダーチャート}
+\label{fig:radar_all}
+\end{figure}
+
+Director-FocusedやActor-Focusedは特定軸が強く突出し、
+Balancedは全軸が中程度で均衡しているなど、
+評価スタイルの差が視覚的に明確に確認される。
+
+\FloatBarrier
+% ===========================
+
+
+\subsection{効果量による検証}
+
+クラスター間の差異が統計的に有意であるかを検証するため、
+Cohen's d に基づく効果量分析を行った。
+6つのクラスター間の全15ペアについて、各軸の寄与分布を比較した。
+
+図\ref{fig:effectsize_heatmap}に効果量のヒートマップを示す。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{heatmap_all_pairs.png}
+\caption{クラスター間効果量のヒートマップ}
+\label{fig:effectsize_heatmap}
+\end{figure}
+
+特に以下が注目点である：
+
+\begin{itemize}
+\item GenreとInteractionは大きな差が出る軸（d > 2のペアが多数）
+\item Actor-Focusedはactor軸で全クラスタと極大差（最大 d ≈ 3.62）
+\item Multi-Signalはcontentとinteractionの両軸で差が大きい
+\item Balancedは中心的役割を果たし、極端クラスタとは d > 1--2 の差が出る
+\end{itemize}
+
+図\ref{fig:mds_clusters}にクラスター距離のMDS可視化を示す。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{mds_cluster_distance.png}
+\caption{MDSによるクラスター距離の可視化}
+\label{fig:mds_clusters}
+\end{figure}
+
+Actor-Focused と Director-Focused は人物情報軸で真逆の位置にあり、
+Genre-Focused と Multi-Signal は近く、内容ベースの評価型同士がまとまっている。
+Balanced は中心付近に位置し、他クラスタの基準点であることが視覚的に示されている。
+
+効果量分析により、クラスターは単なるデータ分割ではなく、
+統計的に裏付けられた「評価基準の異なるタイプ」であることが確認された。
+
+\FloatBarrier
+% ===========================
+
+
+\subsection{実例による解釈}
+
+評価スタイルが実際の映画評価にどのように反映されるか確認するため、
+各クラスタを代表する典型ユーザーの寄与構造を、
+同一映画における「全ユーザー平均（Global）」と比較した。
+
+図\ref{fig:example_contrib}に例を示す。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{example_plot.png}
+\caption{3映画でのクラスター別寄与構造}
+\label{fig:example_contrib}
+\end{figure}
+
+以下に3例を示す：
+
+\paragraph{① Genre-Focusedユーザー：Joker}
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+軸 & Global & Example & 差分 \\
+\midrule
+genre & 0.156 & \textbf{0.219} & \textbf{+0.063} \\
+actor & 0.265 & 0.188 & -0.077 \\
+director & 0.271 & 0.280 & +0.009 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Genre-Focusedは、作品のジャンル枠組みそのものを評価軸としており、
+genre寄与が大きく上昇し、actor寄与は抑制される。
+
+\paragraph{② Director-Focusedユーザー：Forrest Gump}
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+軸 & Global & Example & 差分 \\
+\midrule
+director & 0.280 & \textbf{0.332} & \textbf{+0.052} \\
+genre    & 0.155 & 0.127 & -0.028 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Director-Focusedは、ゼメキス作品としての構造・演出を中心に捉えており、
+director寄与の強化が顕著である。
+
+\paragraph{③ Content-Focusedユーザー：Alien}
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+軸 & Global & Example & 差分 \\
+\midrule
+content & 0.167 & \textbf{0.200} & \textbf{+0.033} \\
+actor   & 0.271 & 0.258 & -0.013 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Content-Focusedは、恐怖構造、孤独、倫理的テーマなど内容面を評価軸とするため、
+content寄与が大きく上昇する。
+
+これらの事例より、6つの評価スタイルは数値的にも行動的にも異なり、
+GLRは単なる評価値の推定ではなく、
+「どの情報をもとに評価しているか」を直接抽出できる。
+
+これは、4.3.1節のVariance Ratio = 2.04とも整合し、
+個性が評価に強く影響することの定量的証拠となる。
+
+\FloatBarrier

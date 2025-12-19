@@ -1,0 +1,132 @@
+\ProvidesPackage{mylayout}
+
+\bibliographystyle{unsrt}
+
+% -----------------------------------------
+% 日本語フォント
+% -----------------------------------------
+\usepackage{luatexja-fontspec}
+
+\setmainjfont{HaranoAjiMincho-Regular}[
+  BoldFont=HaranoAjiMincho-Bold
+]
+\setsansjfont{HaranoAjiGothic-Regular}[
+  BoldFont=HaranoAjiGothic-Bold
+]
+\setmonojfont{HaranoAjiGothic-Regular}
+
+% -----------------------------------------
+% 基本パッケージ
+% -----------------------------------------
+\usepackage{graphicx}
+\usepackage{amsmath, amssymb}
+\usepackage{url}
+\usepackage{bm}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{subcaption}
+
+% -----------------------------------------
+% Hyperref
+% -----------------------------------------
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks = true,
+  linkcolor = blue,
+  citecolor = blue,
+  urlcolor = blue,
+  pdfborder = {0 0 0},
+}
+
+% -----------------------------------------
+% 行間
+% -----------------------------------------
+\renewcommand{\baselinestretch}{1.15}
+
+% -----------------------------------------
+% 見出し調整
+% -----------------------------------------
+\makeatletter
+
+% Chapter（章）のタイトル調整 - 章番号とタイトルを同じ行に
+\renewcommand{\@makechapterhead}[1]{%
+  \vspace*{10pt}%
+  {\parindent \z@ \raggedright \normalfont
+    \ifnum \c@secnumdepth >\m@ne
+      \Large\bfseries \@chapapp\thechapter\@chappos\hspace{1em}#1%
+      \par\nobreak
+    \else
+      \LARGE\bfseries #1\par\nobreak
+    \fi
+    \vskip 20\p@
+  }}
+
+\renewcommand{\@makeschapterhead}[1]{%
+  \vspace*{10pt}%
+  {\parindent \z@ \raggedright
+    \normalfont
+    \interlinepenalty\@M
+    \LARGE \bfseries  #1\par\nobreak
+    \vskip 20\p@
+  }}
+
+% Section
+\renewcommand{\section}{%
+  \@startsection{section}{1}{\z@}%
+  {1.5ex \@plus .5ex \@minus .2ex}%
+  {0.8ex \@plus .2ex}%
+  {\normalfont\large\bfseries}%
+}
+
+% Subsection
+\renewcommand{\subsection}{%
+  \@startsection{subsection}{2}{\z@}%
+  {1.2ex\@plus .5ex \@minus .1ex}%
+  {0.5ex \@plus .1ex}%
+  {\normalfont\normalsize\bfseries}%
+}
+
+% Subsubsection
+\renewcommand{\subsubsection}{%
+  \@startsection{subsubsection}{3}{\z@}%
+  {1ex\@plus .3ex \@minus .1ex}%
+  {0.3ex \@plus .1ex}%
+  {\normalfont\normalsize\bfseries}%
+}
+
+\makeatother
+
+% -----------------------------------------
+% その他設定
+% -----------------------------------------
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+
+\renewcommand{\prechaptername}{第}
+\renewcommand{\postchaptername}{章}
+
+\numberwithin{equation}{chapter}
+\numberwithin{figure}{chapter}
+\numberwithin{table}{chapter}
+
+% -----------------------------------------
+% キャプション
+% -----------------------------------------
+\usepackage{caption}
+\captionsetup{
+  format=plain,
+  font=small,
+  labelsep=space,
+  justification=centering
+}
+
+% -----------------------------------------
+% 便利コマンド
+% -----------------------------------------
+\newcommand{\vect}[1]{\bm{#1}}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\figref}[1]{図\ref{#1}}
+\newcommand{\tabref}[1]{表\ref{#1}}
+\newcommand{\chapref}[1]{第\ref{#1}章}
+\renewcommand{\eqref}[1]{式(\ref{#1})}
+\newcommand{\jpeqref}[1]{式(\ref{#1})}
